@@ -1,0 +1,5 @@
+.terraform/
+.terraform*
+.secret
+venv/
+.direnv

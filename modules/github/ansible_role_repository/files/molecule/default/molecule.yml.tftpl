@@ -1,0 +1,25 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yaml
+driver:
+  name: docker
+platforms:
+  - name: "$${IMAGE_NAME:-${default_instance}}"
+    image: "$${REGISTRY:-quay.io/pimvh}/$${IMAGE_ID:-${default_image_id}}:latest"
+    tmpfs:
+      - /run
+      - /tmp
+    privileged: true
+    override_command: false
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+%{ for instance in instance_names ~}
+      ${instance}:
+        ansible_user: ansible
+%{ endfor ~}
+verifier:
+  name: testinfra

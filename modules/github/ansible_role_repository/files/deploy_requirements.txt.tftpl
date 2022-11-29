@@ -1,0 +1,3 @@
+%{ for package_name, requirement in requirements ~}
+${package_name}==${requirement.version}
+%{ endfor ~}

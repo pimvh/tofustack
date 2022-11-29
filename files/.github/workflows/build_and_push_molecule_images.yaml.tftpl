@@ -1,0 +1,48 @@
+---
+# Inspired on robertdebock (https://github.com/robertdebock) publish workflow
+
+name: Push all images within this repo to quay.io
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [created, edited, published, released]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        system:
+%{ for os, versions in instances ~}
+%{ for version in versions ~}
+          - {os: ${os}, version: ${version}}
+%{ endfor ~}
+%{ endfor ~}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Install podman
+        run: |
+          sudo apt update
+          sudo apt install podman
+
+      - name: Build image $${{ matrix.system.os }} $${{ matrix.system.version }}
+        run: |
+          IMAGE_ID=quay.io/$${{ github.repository_owner }}/molecule-$${{ matrix.system.os }}-$${{ matrix.system.version }}
+
+          # replace the build date label
+          sed -i 's/!!REPLACE_DATE/'"$(date)"'/' "$${{ matrix.system.os }}/$${{ matrix.system.version }}/Dockerfile"
+
+          # actually build the image
+          podman build -t $IMAGE_ID:latest -t $IMAGE_ID:$${{ github.sha }} $${{ matrix.system.os }}/$${{ matrix.system.version }} --label "runnumber=$${GITHUB_RUN_ID}"
+
+      - name: Login to registry and push image
+        run: |
+          IMAGE_ID=quay.io/$${{ github.repository_owner }}/molecule-$${{ matrix.system.os }}-$${{ matrix.system.version }}
+
+          podman login quay.io -u $${{ github.repository_owner }} -p="$${{ secrets.QUAY_LOGIN }}"
+          podman push $IMAGE_ID
