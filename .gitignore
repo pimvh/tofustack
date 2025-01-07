@@ -3,3 +3,5 @@
 .secret
 venv/
 .direnv
+scripts/get_state_passphrase.sh
+scripts/get_gh_token.sh

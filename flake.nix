@@ -60,6 +60,9 @@
               unstable.opentofu
               terraform-graph-beautifier # package to generate graphs
 
+              zsh
+              bitwarden-cli
+
               gnumake
 
               graphviz # dot graph

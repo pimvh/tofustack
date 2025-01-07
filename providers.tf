@@ -46,6 +46,11 @@ terraform {
       version = "~>0.7.6"
     }
 
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~>2.33.0"
+    }
+
   }
 }
 
@@ -69,4 +74,8 @@ provider "null" {
 
 provider "external" {
 
+}
+
+provider "kubernetes" {
+  config_path = "~/.kube/config"
 }
