@@ -18,7 +18,6 @@ Most of this `opentofu` code, is quited specific to my GitHub repository managem
 ## Nix related code
 
 - `pkgs/`: relevant packages which are used inside `flake.nix`
-- `overlays/`: relevant overlays which are used in `flake.nix`
 - `flake.nix`: nix flake, `default` devShell is bootstrapped by `nix-direnv` (see Usage).
 
 ## opentofu code
@@ -55,9 +54,11 @@ When running apply, this code will show a nice table display all the stuff that 
 
 Because I use `direnv`, `opentofu` and other relevant tooling is readily available when I enter the directory of this repository, see [nix-direnv](https://github.com/nix-community/nix-direnv) for reference.
 
-By using a `Makefile`, I can just run  `make apply` to apply opentofu changes, and `make plan` to just plan them out. I looked at other alternatives, like `just` but they didn't bring enough to the table to switch.
+By using a `Justfile`, I can just run  `just apply` to apply opentofu changes, and `just plan` to just plan them out. I looked at other alternatives, like `just` but they didn't bring enough to the table to switch.
 
 Additionally, I use bitwarden to manage secrets, and have hooked that with some scripts to be able to easily retrieve secrets from it.
+
+These scripts are called in the `Justfile`, as `source script/get_state_passphrase.sh` and within the terraform code as `./scripts/get_gh_token.sh`.
 
 ## Secret rotation
 

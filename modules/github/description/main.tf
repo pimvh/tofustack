@@ -33,7 +33,7 @@ locals {
 }
 
 data "external" "generated_table" {
-  program = ["zsh", "-c", "python3 make_table.py"]
+  program = ["python3", "make_table.py"]
 
   working_dir = "${path.module}/scripts"
 
